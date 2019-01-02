@@ -1,12 +1,4 @@
-
-# coding: utf-8
-
-# In[1]:
-
 # India hacks ml 2017: predict the segment
-
-
-# In[2]:
 
 import pandas as pd
 import numpy as np
@@ -21,8 +13,6 @@ from sklearn.linear_model import LogisticRegression
 from datetime import datetime
 from collections import Counter
 
-
-# In[3]:
 
 sample_sub = pd.read_csv('sample_submission.csv')
 file_name_1 = "train_data.json"
@@ -43,60 +33,17 @@ test.reset_index(level=0, inplace=True)
 test.rename(columns = {'index':'ID'},inplace=True)
 print test.shape
 
-
-# In[4]:
-
-train.head()
-
-
-# In[5]:
-
-test.head()
-
-
-# In[6]:
-
-print train.shape, test.shape, sample_sub.shape
-
-
-# In[7]:
-
-len(set(test['ID']).intersection(sample_sub['ID']))
-
-
-# In[8]:
-
 train.to_csv('train.csv', index=False)
 test.to_csv('test.csv', index=False)
 
 
-# In[9]:
-
-train.info()
-
-
-# In[8]:
-
 test['segment'] = 'neg'
-
-
-# In[9]:
-
 train_test = pd.concat([train, test])
 
-
-# In[10]:
-
-train_test.head()
-
-
-# In[11]:
 
 train_test['segment'].loc[train_test['segment'] == 'neg'] = 0
 train_test['segment'].loc[train_test['segment'] == 'pos'] = 1
 
-
-# In[12]:
 
 cities = []
 genres = []
@@ -113,8 +60,6 @@ cities = list(set(cities))
 genres = list(set(genres))
 
 
-# In[13]:
-
 titles = []
 for i, row in train_test.iterrows():
     if row['segment'] == 0:
@@ -128,19 +73,13 @@ for i, row in train_test.iterrows():
         print i
 
 
-# In[16]:
-
 print len(cities)
 print len(genres)
 
 
-# In[14]:
-
 top_cities = ['hyderabad', 'Unknown', 'nagari', 'gandhinagar', 'dubayy', 'new delhi', 'mumbai', 'rawalpindi', 'bengaluru', 'lahore', 'kolkata', 'bhopal', 'chandigarh', 'gurgaon', 'chennai', 'prabhadevi', 'delhi', 'nagar', 'bangalore', 'ahmedabad', 'karachi', 'pune', 'navi mumbai', 'secunderabad', 'dhaka']
 top_titles = ['Koffee With Karan',  'Yeh Rishta Kya Kehlata Hai',  'Ishqbaaaz',  'Ye Hai Mohabbatein',  'Chandra Nandni',  'Naamkarann',  'Pardes Mein Hai Mera Dil',  'Tanhaiyan',  'Dil Boley Oberoi',  'Jana Na Dil Se Door',  'Saath Nibhaana Saathiya',  'Mere Angne Mein',  'MS Dhoni',  'Nach Baliye',  'Ghulaam',  'Suhani Si Ek Ladki',  'Dil Hai Hindustani',  'Savdhaan India',  'Koi Laut Ke Aaya Hai',  'Sarabhai Vs Sarabhai']
 
-
-# In[25]:
 
 count_city = []
 count_genre = []
@@ -338,8 +277,6 @@ for i, row in train_test.iterrows():
         print i
 
 
-# In[26]:
-
 train_test['count_city'] = count_city
 train_test['count_genre'] = count_genre
 train_test['count_titles'] = count_titles
@@ -470,41 +407,24 @@ train_test['h23'] = h23
 
 train_test['tot_time'] = tot_time
 
-
-# In[27]:
-
 train_test['other_genres'] = train_test['Travel'] + train_test['Kabaddi'] + train_test['Crime'] + train_test['Hockey'] + train_test['FormulaE'] + train_test['Teen']+ train_test['Mythology'] + train_test['NA'] + train_test['Horror'] + train_test['Science'] + train_test['Tennis'] + train_test['Thriller'] + train_test['Boxing'] + train_test['Wildlife'] + train_test['IndiaVsSa'] + train_test['Volleyball'] + train_test['Athletics'] + train_test['Documentary'] + train_test['Swimming'] + train_test['Formula1'] + train_test['Badminton'] + train_test['Sport'] + train_test['TableTennis']
-
-
-# In[28]:
 
 def process_id(raw):
     return int(raw.split('-')[1])
 
 train_test['ID_num'] = train_test['ID'].apply(process_id)
 
-
-# In[29]:
-
 train_test.to_csv('train_test.csv', index=False)
-
-
-# In[24]:
 
 del h0, h1, h2, h3, h4, h5, h6, h7, h8, h9, h10, h11, h12, h13, h14, h15, h16, h17, h18, h19, h20, h21, h22, h23
 del d1, d2, d3, d4, d5, d6, d7
 del hyderabad, Unknown, nagari, gandhinagar, dubayy, new_delhi, mumbai, rawalpindi, bengaluru, lahore, kolkata, bhopal, chandigarh, gurgaon, chennai, prabhadevi, delhi, nagar, bangalore, ahmedabad, karachi, pune, navi_mumbai, secunderabad, dhaka
 
 
-# In[30]:
-
 train_test['segment'] = train_test['segment'].astype('int')
 train = train_test[:train.shape[0]]
 test = train_test[train.shape[0]:]
 predictors = ['count_city', 'count_days', 'count_genre', 'count_hours', 'count_titles', 'tot_time', 'Romance', 'LiveTV', 'Comedy', 'Cricket', 'Football', 'Awards', 'Kids', 'TalkShow', 'Drama', 'Action', 'Reality', 'Family', 'other_genres', 'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'h0', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8', 'h9', 'h10', 'h11', 'h12', 'h13', 'h14', 'h15', 'h16', 'h17', 'h18', 'h19', 'h20', 'h21', 'h22', 'h23', 'hyderabad', 'Unknown', 'nagari', 'gandhinagar', 'dubayy', 'new_delhi', 'mumbai', 'rawalpindi', 'bengaluru', 'lahore', 'kolkata', 'bhopal', 'chandigarh', 'gurgaon', 'chennai', 'prabhadevi', 'delhi', 'nagar', 'bangalore', 'ahmedabad', 'karachi', 'pune', 'navi_mumbai', 'secunderabad', 'dhaka', 'Koffee_With_Karan', 'Yeh_Rishta_Kya_Kehlata_Hai', 'Ishqbaaaz', 'Ye_Hai_Mohabbatein', 'Chandra_Nandni', 'Naamkarann', 'Pardes_Mein_Hai_Mera_Dil', 'Tanhaiyan', 'Dil_Boley_Oberoi', 'Jana_Na_Dil_Se_Door', 'Saath_Nibhaana_Saathiya', 'Mere_Angne_Mein', 'MS_Dhoni', 'Nach_Baliye', 'Ghulaam', 'Suhani_Si_Ek_Ladki', 'Dil_Hai_Hindustani', 'Savdhaan_India', 'Koi_Laut_Ke_Aaya_Hai', 'Sarabhai_Vs_Sarabhai']
-
-
-# In[31]:
 
 # making the model now
 def modelfit(alg, dtrain, predictors, useTrainCV=True, cv_folds=5, early_stopping_rounds=50):
@@ -524,9 +444,6 @@ def modelfit(alg, dtrain, predictors, useTrainCV=True, cv_folds=5, early_stoppin
     
     return alg
 
-
-# In[32]:
-
 print 'Training model_1...'
 xgb1 = XGBClassifier(
     learning_rate = 0.1,
@@ -537,65 +454,10 @@ xgb1 = XGBClassifier(
     seed = 27
 )
 model_1 = modelfit(xgb1, train, predictors)
-'''
-train = train.sample(frac=1).reset_index(drop=True)
-print 'Training model_2...'
-xgb2 = XGBClassifier(
-    learning_rate = 0.1,
-    n_estimators = 10000,
-    max_depth = 4,
-    gamma = 0,
-    objective = 'binary:logistic',
-    seed = 69
-)
-model_2 = modelfit(xgb2, train, predictors)
 
-train = train.sample(frac=1).reset_index(drop=True)
-print 'Training model_3...'
-xgb3 = XGBClassifier(
-    learning_rate = 0.1,
-    n_estimators = 10000,
-    max_depth = 4,
-    gamma = 0,
-    objective = 'binary:logistic',
-    seed = 65
-)
-model_3 = modelfit(xgb3, train, predictors)
-
-train = train.sample(frac=1).reset_index(drop=True)
-print 'Training model_4...'
-xgb4 = XGBClassifier(
-    learning_rate = 0.1,
-    n_estimators = 10000,
-    max_depth = 4,
-    gamma = 0,
-    objective = 'binary:logistic',
-    seed = 76
-)
-model_4 = modelfit(xgb4, train, predictors)
-
-train = train.sample(frac=1).reset_index(drop=True)
-print 'Training model_5...'
-xgb5 = XGBClassifier(
-    learning_rate = 0.1,
-    n_estimators = 10000,
-    max_depth = 4,
-    gamma = 0,
-    objective = 'binary:logistic',
-    seed = 62
-)
-model_5 = modelfit(xgb5, train, predictors)
-'''
-
-
-# In[34]:
 print 'Predictions in progress...'
 submit = pd.DataFrame()
 submit['ID'] = test['ID']
 pred_1 = model_1.predict_proba(test[predictors])[:,1]
-#pred_2 = model_2.predict_proba(test[predictors])[:,1]
-#pred_3 = model_3.predict_proba(test[predictors])[:,1]
-#pred_4 = model_4.predict_proba(test[predictors])[:,1]
-#pred_5 = model_5.predict_proba(test[predictors])[:,1]
-submit['segment'] = (pred_1)# + pred_2 + pred_3 + pred_4 + pred_5)/5.0
+submit['segment'] = pred_1
 submit.to_csv('submit.csv', index=False)
